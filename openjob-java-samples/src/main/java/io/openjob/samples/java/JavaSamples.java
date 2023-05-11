@@ -12,7 +12,7 @@ import io.openjob.samples.java.processor.MapReduceProcessorSample;
  * @see MapReduceProcessorSample
  * @since 1.0.0
  */
-public class OpenjobWorkerSamples {
+public class JavaSamples {
 
     /**
      * Main
