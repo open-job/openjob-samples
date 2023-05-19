@@ -1,8 +1,6 @@
 package io.openjob.samples.spring.boot.controller;
 
-import io.openjob.common.util.DateUtil;
-import io.openjob.worker.delay.DelayMessage;
-import io.openjob.worker.delay.DelayTemplate;
+import io.openjob.samples.spring.boot.service.DelayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class TestController {
-    private final DelayTemplate delayTemplate;
+
+    private final DelayService delayService;
 
     @Autowired
-    public TestController(DelayTemplate delayTemplate) {
-        this.delayTemplate = delayTemplate;
+    public TestController(DelayService delayService) {
+        this.delayService = delayService;
     }
 
     /**
@@ -27,10 +26,7 @@ public class TestController {
      */
     @GetMapping("/test/index")
     public String index() {
-        DelayMessage delayMessage = new DelayMessage();
-        delayMessage.setTopic("openjob.test");
-        delayMessage.setExecuteTime(DateUtil.timestamp());
-        String taskId = this.delayTemplate.send(delayMessage);
+        String taskId = this.delayService.send();
         return String.format("Delay taskId:%s", taskId);
     }
 }

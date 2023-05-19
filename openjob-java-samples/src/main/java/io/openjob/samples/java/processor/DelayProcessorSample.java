@@ -19,7 +19,6 @@ public class DelayProcessorSample implements JavaProcessor {
     @Override
     public ProcessResult process(JobContext context) throws InterruptedException {
         logger.info("Delay run {} {} {}", context.getDelayTaskId(), context.getDelayParams(), context.getDelayExtra());
-        log.info("Delay run {} {} {}", context.getDelayTaskId(), context.getDelayParams(), context.getDelayExtra());
         return new ProcessResult(true);
     }
 }

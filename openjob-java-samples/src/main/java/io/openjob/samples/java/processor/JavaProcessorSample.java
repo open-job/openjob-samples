@@ -22,6 +22,6 @@ public class JavaProcessorSample implements JavaProcessor {
         String strDateFormat = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
         logger.info("JavaProcessorTest execute success! instanceId=" + context.getJobInstanceId() + " time=" + sdf.format(date));
-        return new ProcessResult(true);
+        return ProcessResult.success();
     }
 }
