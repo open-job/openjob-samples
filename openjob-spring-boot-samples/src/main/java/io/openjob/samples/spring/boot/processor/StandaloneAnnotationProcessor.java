@@ -22,9 +22,12 @@ public class StandaloneAnnotationProcessor {
      * @return ProcessResult
      */
     @Openjob("annotationProcessor")
-    public ProcessResult annotationProcessor(JobContext context) {
+    public ProcessResult annotationProcessor(JobContext context) throws InterruptedException {
+//        int a=1/0;
         String logMessage = "Standalone processor execute success! jobParamsType={} jobParams={} jobExtendParamsType={} jobExtendParams={}";
         logger.info(logMessage, context.getJobParamType(), context.getJobParams(), context.getJobExtendParamsType(), context.getJobExtendParams());
+
+        Thread.sleep(10000);
         return new ProcessResult(true);
     }
 }
