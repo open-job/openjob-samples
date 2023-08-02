@@ -16,8 +16,11 @@ public class DelayAnnotationProcessor {
     private static final Logger logger = LoggerFactory.getLogger("openjob");
 
     @Openjob("annotationDelay")
-    public ProcessResult annotationDelay(JobContext context) {
+    public ProcessResult annotationDelay(JobContext context) throws InterruptedException {
+//        int a=1/0;
         logger.info("Delay annotation processor execute success!");
+
+        Thread.sleep(10000);
         return ProcessResult.success();
     }
 }
