@@ -20,7 +20,7 @@ public class DelayAnnotationProcessor {
 //        int a=1/0;
         logger.info("Delay annotation processor execute success!");
 
-        Thread.sleep(10000);
+//        Thread.sleep(10000);
         return ProcessResult.success();
     }
 }
