@@ -32,7 +32,7 @@ public class MapReduceAnnotationProcessor implements MapReduceProcessor {
     public ProcessResult process(JobContext context) throws Exception {
         if (context.isRoot()) {
             List<MrTaskTest> tasks = new ArrayList<>();
-            for (int i = 1; i < 10; i++) {
+            for (int i = 1; i < 5; i++) {
                 tasks.add(new MrTaskTest(i, Lists.newArrayList(String.valueOf(1))));
             }
 
