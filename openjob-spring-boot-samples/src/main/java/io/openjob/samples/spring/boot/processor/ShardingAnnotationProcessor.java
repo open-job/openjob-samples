@@ -16,10 +16,10 @@ public class ShardingAnnotationProcessor {
     private static final Logger logger = LoggerFactory.getLogger("openjob");
 
     @Openjob("annotationShardingProcessor")
-    public ProcessResult shardingProcessor(JobContext jobContext) {
+    public ProcessResult shardingProcessor(JobContext jobContext) throws InterruptedException {
         logger.info("Sharding annotation processor execute success! shardingId={} shardingNum={} shardingParams={}",
                 jobContext.getShardingId(), jobContext.getShardingNum(), jobContext.getShardingParam());
-
+        Thread.sleep(30000L);
         logger.info("jobContext={}", jobContext);
         return ProcessResult.success();
     }
