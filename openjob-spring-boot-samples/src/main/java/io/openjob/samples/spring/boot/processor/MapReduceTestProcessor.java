@@ -1,27 +1,26 @@
 package io.openjob.samples.spring.boot.processor;
 
-import com.google.common.collect.Lists;
 import io.openjob.worker.context.JobContext;
 import io.openjob.worker.processor.MapReduceProcessor;
 import io.openjob.worker.processor.ProcessResult;
+import io.openjob.worker.processor.TaskResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author stelin swoft@qq.com
- * @since 1.0.5
+ * @since 1.0.7
  */
-@Slf4j
-@Component("annotationMapReduceProcessor")
-public class MapReduceAnnotationProcessor implements MapReduceProcessor {
+@Component("mapReduceTestProcessor")
+public class MapReduceTestProcessor implements MapReduceProcessor {
     private static final Logger logger = LoggerFactory.getLogger("openjob");
 
     private static final String TWO_NAME = "TASK_TWO";
@@ -29,32 +28,31 @@ public class MapReduceAnnotationProcessor implements MapReduceProcessor {
     private static final String THREE_NAME = "TASK_THREE";
 
     @Override
-    public ProcessResult process(JobContext context) throws Exception {
+    public ProcessResult process(JobContext context) {
         if (context.isRoot()) {
-            List<MrTaskTest> tasks = new ArrayList<>();
+            List<MapChildTaskTest> tasks = new ArrayList<>();
             for (int i = 1; i < 5; i++) {
-                tasks.add(new MrTaskTest(i, Lists.newArrayList(String.valueOf(1))));
+                tasks.add(new MapChildTaskTest(i));
             }
 
-            Thread.sleep(20000L);
-            logger.info("root task taskId={} taskList={}", context.getTaskId(), tasks);
+            logger.info("Map Reduce root task mapList={}", tasks);
             return this.map(tasks, TWO_NAME);
         }
 
         if (context.isTask(TWO_NAME)) {
-            MrTaskTest task = (MrTaskTest) context.getTask();
-            List<MrTaskTest> tasks = new ArrayList<>();
-            for (int i = 1; i < 10; i++) {
-                tasks.add(new MrTaskTest(i, Lists.newArrayList(String.valueOf(task.getId() * i))));
+            MapChildTaskTest task = (MapChildTaskTest) context.getTask();
+            List<MapChildTaskTest> tasks = new ArrayList<>();
+            for (int i = 1; i < task.getId()*2; i++) {
+                tasks.add(new MapChildTaskTest(i));
             }
 
-            logger.info("task two taskId={} taskList={}", context.getTaskId(), tasks);
+            logger.info("Map Reduce task two mapList={}", tasks);
             return this.map(tasks, THREE_NAME);
         }
 
         if (context.isTask(THREE_NAME)) {
-            MrTaskTest task = (MrTaskTest) context.getTask();
-            logger.info("task three taskId={}", context.getTaskId());
+            MapChildTaskTest task = (MapChildTaskTest) context.getTask();
+            logger.info("Map Reduce task three mapTask={}", task);
             return new ProcessResult(true, String.valueOf(task.getId() * 2));
         }
 
@@ -63,15 +61,16 @@ public class MapReduceAnnotationProcessor implements MapReduceProcessor {
 
     @Override
     public ProcessResult reduce(JobContext jobContext) {
-        logger.info("Map reduce taskName={} taskResult={}", jobContext.getTaskName(), jobContext.getTaskResultList());
+        List<String> resultList = jobContext.getTaskResultList().stream().map(TaskResult::getResult)
+                .collect(Collectors.toList());
+        logger.info("Map Reduce resultList={}", resultList);
         return ProcessResult.success();
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class MrTaskTest {
+    public static class MapChildTaskTest {
         private Integer id;
-        private List<String> names;
     }
 }
